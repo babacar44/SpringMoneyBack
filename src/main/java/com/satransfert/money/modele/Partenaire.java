@@ -41,7 +41,7 @@ public class Partenaire implements Serializable {
 
     @NotBlank
     @Size(min=3, max = 50)
-    private String nomComplet;
+    private String username;
 
     @NotBlank
     @Size(min=3, max = 50)
@@ -82,14 +82,16 @@ public class Partenaire implements Serializable {
     public Partenaire() {
     }
 
-    public Partenaire(@NotBlank @Size(min = 3, max = 50) String ninea, @NotBlank @Size(min = 3, max = 50) String raisonSociale, @NotBlank @Size(min = 3, max = 50) String nomComplet, @NotBlank @Size(min = 3, max = 50) String telephone, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 3, max = 50) String adresse, @NotBlank @Size(min = 3, max = 50) String statut) {
+    public Partenaire(@NotBlank @Size(min = 3, max = 50) String ninea, @NotBlank @Size(min = 3, max = 50) String raisonSociale, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(min = 3, max = 50) String telephone, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 3, max = 50) String adresse, @NotBlank @Size(min = 3, max = 50) String statut, List<User> users, List<Compte> comptes) {
         this.ninea = ninea;
         this.raisonSociale = raisonSociale;
-        this.nomComplet = nomComplet;
+        this.username = username;
         this.telephone = telephone;
         this.email = email;
         this.adresse = adresse;
         this.statut = statut;
+        this.users = users;
+        this.comptes = comptes;
     }
 
     public Long getId() {
@@ -116,12 +118,12 @@ public class Partenaire implements Serializable {
         this.raisonSociale = raisonSociale;
     }
 
-    public String getNomComplet() {
-        return nomComplet;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNomComplet(String nomComplet) {
-        this.nomComplet = nomComplet;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTelephone() {

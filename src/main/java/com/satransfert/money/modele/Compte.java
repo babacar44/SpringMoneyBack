@@ -41,16 +41,21 @@ public class Compte implements Serializable {
 
     private Date dateCreation;
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy ="compte")
+    @JsonIgnoreProperties("compte")
+    private List<Depot> depots;
+
    // private Collection<Operation> operations;
 
     public Compte() {
     }
 
 
-    public Compte(@NotBlank @Size(min = 3, max = 50) String numCompte, Integer solde, Partenaire partenaire, Date dateCreation) {
+    public Compte(@NotBlank @Size(min = 3, max = 50) String numCompte, Integer solde,  Date dateCreation) {
         this.numCompte = numCompte;
         this.solde = solde;
-        this.partenaire = partenaire;
         this.dateCreation = dateCreation;
     }
 
@@ -100,5 +105,13 @@ public class Compte implements Serializable {
 
     public void setDateCreation(Date dateCreation) {
         this.dateCreation = dateCreation;
+    }
+
+    public List<Depot> getDepots() {
+        return depots;
+    }
+
+    public void setDepots(List<Depot> depots) {
+        this.depots = depots;
     }
 }

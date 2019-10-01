@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -59,10 +60,12 @@ public class User implements Serializable {
     @Size(min=3, max = 100)
     private String statut;
 
+    @Column(nullable = true)
+    private String profil;
 
     private String photo;
 
-    @JoinColumn(name = "partenaire_id",referencedColumnName ="id")
+    @JoinColumn(name = "partenaire_id",referencedColumnName ="id",nullable = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JsonIgnoreProperties("users")
     private Partenaire partenaire;
@@ -71,6 +74,14 @@ public class User implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JsonIgnoreProperties("users")
     private Compte compte;
+
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy ="user")
+    @JsonIgnoreProperties("user")
+    private List<Depot> depots;
+
+
 
     public String getTelephone() {
         return telephone;
@@ -104,7 +115,7 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, @NotBlank @Size(min = 6, max = 15) String telephone, @NotBlank @Size(min = 4, max = 100) String adresse, @NotBlank @Size(min = 3, max = 100) String statut, String photo) {
+    public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, @NotBlank @Size(min = 6, max = 15) String telephone, @NotBlank @Size(min = 4, max = 100) String adresse, @NotBlank @Size(min = 3, max = 100) String statut, @NotBlank String profil, String photo, Partenaire partenaire, Compte compte) {
         this.name = name;
         this.username = username;
         this.email = email;
@@ -112,7 +123,9 @@ public class User implements Serializable {
         this.telephone = telephone;
         this.adresse = adresse;
         this.statut = statut;
+        this.profil = profil;
         this.photo = photo;
+
     }
 
     public Long getId() {
@@ -181,5 +194,21 @@ public class User implements Serializable {
 
     public void setCompte(Compte compte) {
         this.compte = compte;
+    }
+
+    public String getProfil() {
+        return profil;
+    }
+
+    public void setProfil(String profil) {
+        this.profil = profil;
+    }
+
+    public List<Depot> getDepots() {
+        return depots;
+    }
+
+    public void setDepots(List<Depot> depots) {
+        this.depots = depots;
     }
 }

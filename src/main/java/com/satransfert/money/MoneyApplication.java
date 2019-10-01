@@ -46,7 +46,7 @@ public class MoneyApplication implements CommandLineRunner {
                 }
                 );*/
 
-     //  partenaireRepository.save(new Partenaire("453458","partenaire5&co","partenaire5","339855244","partenaire5@gmailcom","dakar","actif"));
+     //   partenaireRepository.save(new Partenaire("453458","partenaire5&co","partenaire5","339855244","partenaire5@gmailcom","dakar","actif"));
      /*   partenaireRepository.save(new Partenaire("854225","partenaire2&co","partenaire2","339874563","partenaire2@gmailcom","dakar","actif"));
         partenaireRepository.save(new Partenaire("846252","partenaire3&co","partenaire3","333214569","partenaire3@gmailcom","dakar","actif"));
 
