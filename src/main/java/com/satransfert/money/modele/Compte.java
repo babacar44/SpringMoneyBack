@@ -114,4 +114,6 @@ public class Compte implements Serializable {
     public void setDepots(List<Depot> depots) {
         this.depots = depots;
     }
+
+
 }

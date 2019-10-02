@@ -1,10 +1,9 @@
 package com.satransfert.money.modele;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,14 +19,16 @@ public class Depot implements Serializable {
     private Date dateDepot;
 
     @JoinColumn(name = "compte_id",referencedColumnName ="id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JsonIgnoreProperties("depots")
+    @ManyToOne(optional = true)
+    //@JsonIgnoreProperties("depots")
+    @JsonIgnore
     private Compte compte;
 
     @JoinColumn(name = "caissier_id",referencedColumnName ="id")
     @ManyToOne(//fetch = FetchType.LAZY,
             optional = true)
-    @JsonIgnoreProperties("depots")
+    @JsonIgnore
+    //@JsonIgnoreProperties("depots")
     private User user;
 
 

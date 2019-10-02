@@ -1,5 +1,6 @@
 package com.satransfert.money.modele;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -66,19 +67,24 @@ public class User implements Serializable {
     private String photo;
 
     @JoinColumn(name = "partenaire_id",referencedColumnName ="id",nullable = true)
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JsonIgnoreProperties("users")
+    @ManyToOne(//fetch = FetchType.LAZY,
+            optional = true)
+    //@JsonIgnoreProperties("users")
+    @JsonIgnore
     private Partenaire partenaire;
 
     @JoinColumn(name = "compte_id",referencedColumnName ="id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JsonIgnoreProperties("users")
+    @ManyToOne(//fetch = FetchType.LAZY,
+            optional = true)
+    //@JsonIgnoreProperties("users")
+    @JsonIgnore
     private Compte compte;
 
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
+            // = FetchType.LAZY,
             mappedBy ="user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
+   // @JsonIgnoreProperties("user")
     private List<Depot> depots;
 
 
