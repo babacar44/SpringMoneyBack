@@ -94,8 +94,8 @@ public class PartenaireController {
 
     /**
      * ajouter un user
-     * @return user
-     * @return new message
+     *
+     *
      */
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
@@ -103,7 +103,8 @@ public class PartenaireController {
     public ResponseEntity ajouterUser(@Valid @RequestBody User u){
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         u.setStatut("actif");
-
+      //  u.setPartenaire(userDetailsService.getUserConnect());
+        u.setPartenaire(userDetailsService.getUserConnect().getPartenaire());
         if (u.getProfil().equals("1")){
             Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
                     .orElseThrow(() -> new ApplicationContextException("User Role not set."));
@@ -134,9 +135,8 @@ public class PartenaireController {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
-        //User result = userRepository.save(u);
 
-        //  return ResponseEntity.created().body("User registered successfully"));
+
         User result = userRepository.save(u);
 
         URI location = ServletUriComponentsBuilder

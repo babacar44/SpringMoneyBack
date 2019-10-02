@@ -57,7 +57,7 @@ public class User implements Serializable {
     @Size(min=4, max = 100)
     private String adresse;
 
-    @NotBlank
+
     @Size(min=3, max = 100)
     private String statut;
 

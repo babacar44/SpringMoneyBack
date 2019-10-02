@@ -1,8 +1,6 @@
 package com.satransfert.money.controller;
 
-import com.satransfert.money.modele.Compte;
-import com.satransfert.money.modele.Depot;
-import com.satransfert.money.modele.DepotForm;
+import com.satransfert.money.modele.*;
 import com.satransfert.money.payload.ApiResponse;
 import com.satransfert.money.repository.CompteRepository;
 import com.satransfert.money.repository.DepotRepository;
@@ -37,7 +35,7 @@ public class DepotController {
     /**
      *
      *
-     * @param depot
+     *
      * @return depot
      */
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
@@ -47,7 +45,8 @@ public class DepotController {
         Depot depot = new Depot();
         Date now=new Date();
         depot.setDateDepot(now);
-        depot.setUser(userDetailsService.getUserConnect());
+        User user = userDetailsService.getUserConnect();
+        depot.setUser(user);
         depot.setMontant(depotForm.getMontant());
         Compte compte = compteRepository.findCompteByNumCompte(depotForm.getNumCompte()).orElseThrow(() -> new ApplicationContextException("Compte  not found."));
 

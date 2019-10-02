@@ -66,11 +66,6 @@ public class UserController {
     }
 
 
-    /**
-     * ajouter un user
-     * @return user
-     * @return new message
-     */
 
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
