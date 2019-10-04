@@ -17,8 +17,10 @@ import java.util.Date;
 
 
 @RestController
-@CrossOrigin
 @RequestMapping("/compte")
+
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class CompteController {
 
     @Autowired
@@ -33,7 +35,7 @@ public class CompteController {
      */
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ApiResponse> ajouterUser(@RequestBody Compte compte){
+    public ResponseEntity<ApiResponse> ajouterCompte(@RequestBody Compte compte){
 
         SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddhhmmss");//210902 251763
         Date now=new Date();

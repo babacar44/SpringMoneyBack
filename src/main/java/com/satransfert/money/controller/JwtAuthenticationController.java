@@ -4,10 +4,11 @@ package com.satransfert.money.controller;
 
 
 import com.satransfert.money.config.JwtTokenUtil;
-import com.satransfert.money.modele.JwtRequest;
-import com.satransfert.money.modele.JwtResponse;
+import com.satransfert.money.modele.*;
+import com.satransfert.money.repository.UserRepository;
 import com.satransfert.money.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController //ou Controller
-@CrossOrigin //Cors fais la liaison entre les apps
+@CrossOrigin
+//Cors fais la liaison entre les apps
 public class JwtAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -43,9 +45,17 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    @Autowired
+    UserRepository userRepository;
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE })
     public @ResponseBody String createLoginToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+
+        User user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new ApplicationContextException("Not Found"));
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        if (user.getStatut().equalsIgnoreCase("inactif")){
+            return  "Vous etes bloqué ";
+        }
+
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);

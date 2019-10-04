@@ -79,6 +79,7 @@ public class Partenaire implements Serializable {
     @JsonIgnoreProperties("partenaire")//mappage avec l objet service
     private List<Compte> comptes;
 
+
     public Partenaire() {
     }
 

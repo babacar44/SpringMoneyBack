@@ -49,6 +49,9 @@ public class User implements Serializable {
     @Size(min=6, max = 100)
     private String password;
 
+    @Size(min=6, max = 100)
+    private String propriete;
+
     @NotBlank
     @Size(min=6, max = 15)
     private String telephone;
@@ -77,7 +80,7 @@ public class User implements Serializable {
     @ManyToOne(//fetch = FetchType.LAZY,
             optional = true)
     //@JsonIgnoreProperties("users")
-    @JsonIgnore
+   // @JsonIgnore
     private Compte compte;
 
     @OneToMany(cascade = CascadeType.ALL,
@@ -121,17 +124,19 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, @NotBlank @Size(min = 6, max = 15) String telephone, @NotBlank @Size(min = 4, max = 100) String adresse, @NotBlank @Size(min = 3, max = 100) String statut, @NotBlank String profil, String photo, Partenaire partenaire, Compte compte) {
+    public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, @Size(min = 6, max = 100) String propriete, @NotBlank @Size(min = 6, max = 15) String telephone, @NotBlank @Size(min = 4, max = 100) String adresse, @Size(min = 3, max = 100) String statut, String profil, String photo, Partenaire partenaire, Compte compte) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.propriete = propriete;
         this.telephone = telephone;
         this.adresse = adresse;
         this.statut = statut;
         this.profil = profil;
         this.photo = photo;
-
+        this.partenaire = partenaire;
+        this.compte = compte;
     }
 
     public Long getId() {
@@ -216,5 +221,13 @@ public class User implements Serializable {
 
     public void setDepots(List<Depot> depots) {
         this.depots = depots;
+    }
+
+    public String getPropriete() {
+        return propriete;
+    }
+
+    public void setPropriete(String propriete) {
+        this.propriete = propriete;
     }
 }

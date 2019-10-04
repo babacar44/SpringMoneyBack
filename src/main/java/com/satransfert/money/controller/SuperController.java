@@ -1,10 +1,10 @@
 package com.satransfert.money.controller;
 
 
-import com.satransfert.money.modele.Role;
-import com.satransfert.money.modele.RoleName;
-import com.satransfert.money.modele.User;
+import com.satransfert.money.modele.*;
 import com.satransfert.money.payload.ApiResponse;
+import com.satransfert.money.repository.CompteRepository;
+import com.satransfert.money.repository.PartenaireRepository;
 import com.satransfert.money.repository.RoleRepository;
 import com.satransfert.money.repository.UserRepository;
 import com.satransfert.money.services.UserDetailsServiceImpl;
@@ -21,14 +21,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/super")
+public class SuperController {
 
 
     @Autowired
@@ -44,6 +46,11 @@ public class UserController {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    PartenaireRepository partenaireRepository;
+
+    @Autowired
+    CompteRepository compteRepository;
 
 
     /**
@@ -69,8 +76,9 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity ajouterUser(@Valid @RequestBody User u){
+    public ResponseEntity ajouterUserSuper(@Valid @RequestBody User u){
         u.setPassword(passwordEncoder.encode(u.getPassword()));
+
 
         if (u.getProfil().equals("1")){
             Role userRole = roleRepository.findByName(RoleName.ROLE_CAISSIER)
@@ -111,22 +119,89 @@ public class UserController {
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
 
-    /**
-     * ajouter un user
-     * @return user/id
-     */
 
-    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
     @PutMapping(value = "/modifier/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public User modifierUser(@PathVariable Long id, @RequestBody User u){
+    public User modifierUser(@PathVariable Long id, @RequestBody() User u){
         //sachant que l objet c ne contient pas l'id
         //on prend l id du path variable on le stocke dans u objet et on utilise directement c
         u.setId(id);
         u.setPassword(passwordEncoder.encode(u.getPassword()));
 
-        return  userRepository.save(u);
+        return userRepository.save(u);
+
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    @GetMapping(value = "/bloquerPartenaire/{id}")
+    public ResponseEntity<ApiResponse> bloquerPartenaire(@PathVariable Long id ){
+        Partenaire partenaire = partenaireRepository.findPartenaireById(id);
 
+        if (partenaire.getStatut().equals("actif")){
+            partenaire.setStatut("inactif");
+
+            partenaireRepository.save(partenaire);
+
+            return new ResponseEntity(new ApiResponse(true, "statut bloquer now"),
+                    HttpStatus.CREATED);
+        }
+        if (partenaire.getStatut().equals("inactif")){
+            partenaire.setStatut("actif");
+            partenaireRepository.save(partenaire);
+
+            return new ResponseEntity(new ApiResponse(true, "statut actif now"),
+                    HttpStatus.CREATED);
+        }
+        return null;
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    @PostMapping(value = "/add",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ApiResponse> ajouterPartenaire(@RequestBody Partenaire partenaire){
+
+        Partenaire result  = partenaireRepository.save(partenaire);
+        User user = new User();
+        user.setName(partenaire.getUsername());
+        user.setAdresse(partenaire.getAdresse());
+        user.setEmail(partenaire.getEmail());
+        user.setUsername(partenaire.getUsername());
+        user.setStatut("actif");
+        user.setPassword(passwordEncoder.encode("passer"));
+        user.setPropriete(partenaire.getRaisonSociale());
+        user.setPartenaire(partenaire);
+        user.setTelephone(partenaire.getTelephone());
+
+
+        Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN_PARTENER)
+                .orElseThrow(() -> new ApplicationContextException("User Role not set."));
+
+        user.setRoles(Collections.singleton(userRole));
+
+        userRepository.save(user);
+
+
+
+
+        Compte compte = new Compte();
+        SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddhhmmss");//210902 251763
+        Date now=new Date();
+        String numcompte=formater.format(now);
+        compte.setNumCompte(numcompte);
+        compte.setSolde(0);
+        compte.setPartenaire(partenaire);
+        compte.setDateCreation(now);
+        compteRepository.save(compte);
+
+        // return  partenaireRepository.save(partenaire);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/super/add")
+                .buildAndExpand(result.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "Partenaire registered successfully"));
+
+
+    }
 
 }

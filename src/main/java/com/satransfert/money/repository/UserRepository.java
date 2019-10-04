@@ -1,8 +1,11 @@
 package com.satransfert.money.repository;
 
+import com.satransfert.money.modele.Partenaire;
 import com.satransfert.money.modele.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -24,4 +27,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
  /* @Query("select u from User u where u.telephone like :x")
     public Page<User> chercher(@Param("x")String)*/
+
+    @Query("SELECT u FROM User u WHERE u.id = :x")
+    User findUserById(@Param("x") Long id);
+
 }
