@@ -29,7 +29,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+/*
 
+Cette classe étend la classe  WebSecurityConfigurerAdapter.
+ Ceci est une classe de commodité qui permet la personnalisation à la fois  WebSecurity et  HttpSecurity.
+ */
     @Autowired //injecteur d objet
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
@@ -42,6 +46,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 // user for matching credentials
 // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new
+                UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
     @Bean//veut dire ca va retourner un objet et le renvoi à la demande
     public PasswordEncoder passwordEncoder() {
@@ -67,11 +78,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-   /* @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new
-                UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
-    }*/
+
 }

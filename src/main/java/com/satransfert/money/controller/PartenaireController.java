@@ -23,6 +23,7 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -47,6 +48,8 @@ public class PartenaireController {
 
 
 
+
+
     /**
      * ajouter un user
      *
@@ -58,6 +61,7 @@ public class PartenaireController {
     public ResponseEntity ajouterUser(@Valid @RequestBody User u){
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         u.setStatut("actif");
+        u.setPropriete(userDetailsService.getUserConnect().getPartenaire().getRaisonSociale());
       //  u.setPartenaire(userDetailsService.getUserConnect());
         u.setPartenaire(userDetailsService.getUserConnect().getPartenaire());
         if (u.getProfil().equals("1")){
@@ -135,4 +139,12 @@ public class PartenaireController {
         }
         return null;
     }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
+    @GetMapping(value = "/listerUser",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public List<User> find(){
+        return  userRepository.listUsers(userDetailsService.getUserConnect().getPropriete());
+
+        }
+
 }

@@ -18,7 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.ExpiredJwtException;
 
 //Intercepte le token et procede à la verififcation et la validation
-
+//Il vérifie si la demande contient un jeton JWT valide.
+// S'il possède un jeton JWT valide,
+// il définit l'authentification en contexte pour spécifier que l'utilisateur actuel est authentifié.
 @Component
 @CrossOrigin
 
@@ -39,6 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {

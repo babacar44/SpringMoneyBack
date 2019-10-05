@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.*;
 //Cors fais la liaison entre les apps
 public class JwtAuthenticationController {
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager; //À l'aide de Spring Authentication Manager, nous authentifions le nom d'utilisateur et le mot de passe
+   //Si les informations d'identification sont valides, un jeton JWT est créé à l'aide de  JWTTokenUtil et est fourni au client.
     @Autowired
     //
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtTokenUtil jwtTokenUtil; //creation et validation du token
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -34,20 +35,24 @@ public class JwtAuthenticationController {
 
 
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE })
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST,consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
         //genere token
         final String token = jwtTokenUtil.generateToken(userDetails);
+        userDetails.getAuthorities().forEach(u ->{
+            System.out.println(u.getAuthority());
+        });
         //retourne token en json
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @Autowired
     UserRepository userRepository;
-    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE })
+    @RequestMapping(value = "/login", method = RequestMethod.POST,consumes = {MediaType.APPLICATION_JSON_VALUE})
+    //, consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE }
     public @ResponseBody String createLoginToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
         User user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new ApplicationContextException("Not Found"));

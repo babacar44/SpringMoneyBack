@@ -12,6 +12,7 @@ public interface PartenaireRepository extends JpaRepository<Partenaire, Long> {
        @Query("SELECT p FROM Partenaire p WHERE p.id = :x")
      Partenaire findPartenaireById(@Param("x") Long id);
 
+      // @Query("SELECT ")
 
 
 }

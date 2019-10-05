@@ -39,7 +39,7 @@ public class MoneyApplication implements CommandLineRunner {
 
     @Override
     public void run(String...args)throws Exception{
-      //  System.out.println(encoder.encode("passer"));
+       System.out.println(encoder.encode("passer"));
 
      /* userRepository.save(new User("binetou ba","binette","binette@gmail.com","passer","774100144","dakar","actif", "ben.jpg"));
         userRepository.save(new User("papa mama","papa555","papaaa@gmail.com","passer","778963214","dakar","actif", "papa.jpg"));

@@ -157,7 +157,7 @@ public class SuperController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
-    @PostMapping(value = "/add",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/partenaire/add",consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ApiResponse> ajouterPartenaire(@RequestBody Partenaire partenaire){
 
         Partenaire result  = partenaireRepository.save(partenaire);

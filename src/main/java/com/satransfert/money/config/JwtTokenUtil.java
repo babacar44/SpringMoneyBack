@@ -19,19 +19,20 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+//Le  JwtTokenUtil est responsable de l'exécution d'opérations JWT telles que la création et la validation
 @Component
-@CrossOrigin
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     //encodage token
     @Value("${jwt.secret}")
     private String secret;
-    //retrieve username from jwt token
+    //récupère le nom d'utilisateur du jeton jwt
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
-    //retrieve expiration date from jwt token
+
+    //récupère la date d'expiration du jeton jwt
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -39,16 +40,16 @@ public class JwtTokenUtil implements Serializable {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
-    //for retrieveing any information from token we will need the secret key
+    //pour récupérer toute information d'un jeton, nous aurons besoin de la clé secrète
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
-    //check if the token has expired
+    //vérifie si le jeton a expiré
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
-    //generate token for user
+    //générer un jeton pour l'utilisateur
     public String generateToken(UserDetails userDetails) {
 
         Map<String, Object> claims = new HashMap<>();
@@ -56,11 +57,11 @@ public class JwtTokenUtil implements Serializable {
     }
     @Autowired
     UserRepository userRepository;
-    //while creating the token -
-//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-//2. Sign the JWT using the HS512 algorithm and secret key.
-//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-//   compaction of the JWT to a URL-safe string
+    // lors de la création du jeton -
+//1. Définir les revendications du jeton, telles que l'émetteur, l'expiration, le sujet et l'ID
+// 2. Signez le JWT en utilisant l'algorithme HS512 et la clé secrète.
+// 3. Selon la sérialisation JWS compacte (https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
+// compactage du JWT en une chaîne sécurisée par les URL
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
            User user= userRepository.findByUsername(subject).orElseThrow();

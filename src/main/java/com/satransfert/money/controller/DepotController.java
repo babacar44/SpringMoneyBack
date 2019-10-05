@@ -19,7 +19,7 @@ import java.util.Date;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RequestMapping("/depot")
 public class DepotController {
 
