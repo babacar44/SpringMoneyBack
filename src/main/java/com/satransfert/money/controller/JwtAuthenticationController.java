@@ -80,5 +80,4 @@ public class JwtAuthenticationController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-//on gere ici le bloc et debloc
 }

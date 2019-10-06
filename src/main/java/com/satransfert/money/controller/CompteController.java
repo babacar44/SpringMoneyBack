@@ -3,6 +3,7 @@ package com.satransfert.money.controller;
 import com.satransfert.money.modele.Compte;
 import com.satransfert.money.payload.ApiResponse;
 import com.satransfert.money.repository.CompteRepository;
+import com.satransfert.money.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 @RestController
@@ -25,7 +27,8 @@ public class CompteController {
 
     @Autowired
     CompteRepository compteRepository;
-
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     /**
      *
@@ -51,5 +54,16 @@ public class CompteController {
 
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
+    @GetMapping(value = "/listerComptePartenaire",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public List<Compte> trouverlescompte(){
+        return compteRepository.listCompte(userDetailsService.getUserConnect().getPartenaire().getId());
+    }
 
-}
+  /*
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
+    @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ApiResponse> affecterCompte(@RequestBody Compte compte) {
+
+    }*/
+    }

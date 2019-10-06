@@ -57,9 +57,9 @@ public class SuperController {
      * lister les users
      */
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
-    @GetMapping(value = "/lister",consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public List<User> liste(){
-            return userRepository.findAll();
+    @GetMapping(value = "/listerPartenaire",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public List<Partenaire> liste(){
+            return partenaireRepository.findAll();
     }
 
     /**
@@ -75,10 +75,10 @@ public class SuperController {
 
 
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
-    @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/ajouterUser",consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity ajouterUserSuper(@Valid @RequestBody User u){
         u.setPassword(passwordEncoder.encode(u.getPassword()));
-
+        u.setPropriete(userDetailsService.getUserConnect().getPropriete());
 
         if (u.getProfil().equals("1")){
             Role userRole = roleRepository.findByName(RoleName.ROLE_CAISSIER)
@@ -203,5 +203,13 @@ public class SuperController {
 
 
     }
+
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    @GetMapping(value = "/listerUser",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public List<User> find(){
+        return  userRepository.listUsers(userDetailsService.getUserConnect().getPropriete());
+
+    }
+
 
 }
