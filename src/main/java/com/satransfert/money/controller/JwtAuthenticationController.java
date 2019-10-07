@@ -31,13 +31,17 @@ public class JwtAuthenticationController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    UserRepository userRepository;
 
 
 
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST,consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
         //genere token
@@ -49,15 +53,13 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @Autowired
-    UserRepository userRepository;
     @RequestMapping(value = "/login", method = RequestMethod.POST,consumes = {MediaType.APPLICATION_JSON_VALUE})
     //, consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE }
     public @ResponseBody String createLoginToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
         User user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new ApplicationContextException("Not Found"));
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        if (user.getStatut().equalsIgnoreCase("inactif")){
+        if (user.getStatut().equalsIgnoreCase("inactif") || (user.getPartenaire().getStatut().equalsIgnoreCase("inactif"))){
             return  "Vous etes bloqué ";
         }
 

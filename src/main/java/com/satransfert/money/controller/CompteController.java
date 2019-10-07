@@ -45,21 +45,28 @@ public class CompteController {
         String numcompte=formater.format(now);
         compte.setNumCompte(numcompte);
         compte.setDateCreation(now);
+        compte.setSolde(0);
 
         Compte result=  compteRepository.save(compte);
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/compte/ajouter")
-                .buildAndExpand(result.getDepots() ).toUri();
+                .fromCurrentContextPath().path("/lister")
+                .buildAndExpand(result.getNumCompte() ).toUri();
         return ResponseEntity.created(location).body(new ApiResponse(true, "Compte registered successfully"));
 
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
-    @GetMapping(value = "/listerComptePartenaire",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/lister")
     public List<Compte> trouverlescompte(){
         return compteRepository.listCompte(userDetailsService.getUserConnect().getPartenaire().getId());
     }
 
+
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    @GetMapping(value = "/listerAllCompte")
+    public List<Compte> trouverTouslescompte(){
+        return compteRepository.findAll();
+    }
   /*
     @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
     @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})

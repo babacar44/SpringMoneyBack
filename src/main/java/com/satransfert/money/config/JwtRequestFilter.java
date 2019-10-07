@@ -22,8 +22,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 // S'il possède un jeton JWT valide,
 // il définit l'authentification en contexte pour spécifier que l'utilisateur actuel est authentifié.
 @Component
-@CrossOrigin
-
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl jwtUserDetailsService;

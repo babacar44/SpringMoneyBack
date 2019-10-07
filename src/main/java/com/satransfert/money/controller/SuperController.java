@@ -57,7 +57,7 @@ public class SuperController {
      * lister les users
      */
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
-    @GetMapping(value = "/listerPartenaire",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/listerPartenaire")
     public List<Partenaire> liste(){
             return partenaireRepository.findAll();
     }
@@ -79,7 +79,7 @@ public class SuperController {
     public ResponseEntity ajouterUserSuper(@Valid @RequestBody User u){
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         u.setPropriete(userDetailsService.getUserConnect().getPropriete());
-
+        u.setStatut("actif");
         if (u.getProfil().equals("1")){
             Role userRole = roleRepository.findByName(RoleName.ROLE_CAISSIER)
                     .orElseThrow(() -> new ApplicationContextException("User Role not set."));
@@ -159,10 +159,10 @@ public class SuperController {
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @PostMapping(value = "/partenaireAdd",consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ApiResponse> ajouterPartenaire(@RequestBody Partenaire partenaire){
-
+        partenaire.setStatut("actif");
         Partenaire result  = partenaireRepository.save(partenaire);
         User user = new User();
-        user.setName(partenaire.getUsername());
+        user.setName(partenaire.getNomUser());
         user.setAdresse(partenaire.getAdresse());
         user.setEmail(partenaire.getEmail());
         user.setUsername(partenaire.getUsername());
@@ -205,11 +205,12 @@ public class SuperController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
-    @GetMapping(value = "/listerUser",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/listerUser")
     public List<User> find(){
         return  userRepository.listUsers(userDetailsService.getUserConnect().getPropriete());
 
     }
+
 
 
 }

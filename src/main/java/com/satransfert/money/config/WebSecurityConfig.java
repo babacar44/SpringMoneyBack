@@ -71,7 +71,8 @@ Cette classe étend la classe  WebSecurityConfigurerAdapter.
                 .authorizeRequests().antMatchers("/authenticate","/login").permitAll(). //route permised
         // all other requests need to be authenticated
         anyRequest().authenticated().and().
-        // make sure we use stateless session; session won't be used to
+        // make sure we use stateless session; session won't be used to                   <div class="form-group">
+
         // store user's state.
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

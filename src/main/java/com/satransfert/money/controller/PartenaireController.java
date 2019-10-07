@@ -118,7 +118,7 @@ public class PartenaireController {
 
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
-    @PutMapping(value = "/bloquerUser/{id}")
+    @PostMapping(value = "/changerStatut/{id}")
     public ResponseEntity<ApiResponse> bloquerUser(@PathVariable Long id ){
         User user = userRepository.findUserById(id);
 
@@ -141,7 +141,7 @@ public class PartenaireController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
-    @GetMapping(value = "/listerUser",consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/listerUser")
     public List<User> find(){
         return  userRepository.listUsers(userDetailsService.getUserConnect().getPropriete());
 

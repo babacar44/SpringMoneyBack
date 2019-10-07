@@ -61,6 +61,10 @@ public class Partenaire implements Serializable {
     @Size(min=3, max = 50)
     private String statut;
 
+    @NotBlank
+    @Size(min=3, max = 50)
+    private String nomUser;
+
     /*@OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "post")
@@ -83,7 +87,7 @@ public class Partenaire implements Serializable {
     public Partenaire() {
     }
 
-    public Partenaire(@NotBlank @Size(min = 3, max = 50) String ninea, @NotBlank @Size(min = 3, max = 50) String raisonSociale, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(min = 3, max = 50) String telephone, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 3, max = 50) String adresse, @NotBlank @Size(min = 3, max = 50) String statut, List<User> users, List<Compte> comptes) {
+    public Partenaire(@NotBlank @Size(min = 3, max = 50) String ninea, @NotBlank @Size(min = 3, max = 50) String raisonSociale, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(min = 3, max = 50) String telephone, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 3, max = 50) String adresse, @NotBlank @Size(min = 3, max = 50) String statut, @NotBlank @Size(min = 3, max = 50) String nomUser) {
         this.ninea = ninea;
         this.raisonSociale = raisonSociale;
         this.username = username;
@@ -91,8 +95,7 @@ public class Partenaire implements Serializable {
         this.email = email;
         this.adresse = adresse;
         this.statut = statut;
-        this.users = users;
-        this.comptes = comptes;
+        this.nomUser = nomUser;
     }
 
     public Long getId() {
@@ -173,5 +176,13 @@ public class Partenaire implements Serializable {
 
     public void setComptes(List<Compte> comptes) {
         this.comptes = comptes;
+    }
+
+    public String getNomUser() {
+        return nomUser;
+    }
+
+    public void setNomUser(String nomUser) {
+        this.nomUser = nomUser;
     }
 }
