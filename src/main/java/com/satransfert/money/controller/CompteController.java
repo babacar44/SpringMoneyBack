@@ -1,11 +1,14 @@
 package com.satransfert.money.controller;
 
 import com.satransfert.money.modele.Compte;
+import com.satransfert.money.modele.Partenaire;
 import com.satransfert.money.payload.ApiResponse;
 import com.satransfert.money.repository.CompteRepository;
+import com.satransfert.money.repository.PartenaireRepository;
 import com.satransfert.money.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.context.ApplicationContextException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,17 +32,17 @@ public class CompteController {
     CompteRepository compteRepository;
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    PartenaireRepository partenaireRepository;
 
-    /**
-     *
-     *
-     * @param compte
-     * @return compte
-     */
+
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ApiResponse> ajouterCompte(@RequestBody Compte compte){
+    public ResponseEntity<ApiResponse> ajouterCompte(@RequestBody Partenaire p){
+        Compte compte = new Compte();
 
+        Partenaire partenaire = partenaireRepository.findById(p.getId()).orElseThrow(() -> new ApplicationContextException("Partenaire  not found."));
+        compte.setPartenaire(partenaire);
         SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddhhmmss");//210902 251763
         Date now=new Date();
         String numcompte=formater.format(now);
@@ -71,6 +74,5 @@ public class CompteController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN_PARTENER')")
     @PostMapping(value = "/ajouter",consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ApiResponse> affecterCompte(@RequestBody Compte compte) {
-
     }*/
-    }
+}
